@@ -4,17 +4,23 @@ import re
 from datetime import datetime, timedelta
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
+APP_PASSWORD = os.getenv("APP_PASSWORD")
 # --- CONFIG EMAIL --- #
-EMAIL_ACCOUNT = "thangvu2098@gmail.com"
-EMAIL_PASSWORD = "duvy raia nyas ohsr"
+
 IMAP_SERVER = "imap.gmail.com"
 
 # --- FUNCTION TO GET OTP --- #
 def get_latest_tiktok_code(target_email):
     try:
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
-        mail.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
+        mail.login(EMAIL_ADDRESS, APP_PASSWORD)
         mail.select("inbox")
 
         # Only fetch from TikTok and recent (2 days)
@@ -58,9 +64,8 @@ async def handle_email(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- MAIN --- #
 if __name__ == "__main__":
-    TELEGRAM_BOT_TOKEN = "7857440834:AAEMsJDpvwpk7ijqzC_1X_KmNSoSEaM88qY"
 
-    app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_email))
