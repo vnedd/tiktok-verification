@@ -108,7 +108,6 @@ if __name__ == "__main__":
             ENTER_EMAIL: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_email)],
         },
         fallbacks=[CommandHandler("cancel", cancel)],
-        per_message=True,
     )
 
     app.add_handler(conv_handler)
